@@ -11,6 +11,7 @@
         - defaults.yml
       paths:
         - ../ambari-repo/vars
+  ignore_errors: true
 
 - name: Add the Ambari repository (yum)
   yum_repository:
