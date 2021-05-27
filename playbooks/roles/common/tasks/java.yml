@@ -59,3 +59,31 @@
         - local_policy.jar
         - US_export_policy.jar
   when: java == "oraclejdk"
+
+
+# Solve KRB5 issues for JDK >= u242
+
+- name: Capture installed Java version
+  shell: /usr/bin/java -version 2>&1 | grep version | tr -d '"' | tr "_" " " | awk '{print $3"\n"$4}'
+  register: version
+
+- set_fact:
+    installed_jdk_version: "{{ version.stdout_lines[0] }}"
+    installed_jdk_update: "{{ version.stdout_lines[1] }}"
+
+- name: Find java.security file
+  find:
+    paths: "{{ jdk_java_security_paths }}"
+    pattern: "java.security"
+    follow: yes
+  register: java_security
+
+- name: Apply workaround for Kerberos issues introduced in OpenJDK 1.8u242 and 11.0.6 (JDK-8215032)
+  lineinfile:
+    path: "{{ item.path }}"
+    regexp: '^sun.security.krb5.disableReferrals='
+    line: sun.security.krb5.disableReferrals=true
+  with_items: "{{ java_security.files }}"
+  when: >
+    ((installed_jdk_version == '1.8.0' and installed_jdk_update|int >= 242)
+      or (installed_jdk_version is version('11.0.6', '>=')))
