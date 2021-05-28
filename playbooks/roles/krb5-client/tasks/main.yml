@@ -25,3 +25,9 @@
     dest: /etc/krb5.conf
     mode: 0644
     force: yes
+
+- name: Remove renew lifetime to avoid Java KDC issues
+  ansible.builtin.lineinfile:
+    path: /etc/krb5.conf
+    state: absent
+    regexp: '^%renew_lifetime'
