@@ -26,8 +26,8 @@
     mode: 0644
     force: yes
 
-- name: Remove renew lifetime to avoid Java KDC issues
-  lineinfile:
-    path: /etc/krb5.conf
-    state: absent
-    regexp: '^renew_lifetime'
+# - name: Remove renew lifetime to avoid Java KDC issues
+#   lineinfile:
+#     path: /etc/krb5.conf
+#     state: absent
+#     regexp: '^renew_lifetime'

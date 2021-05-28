@@ -1,4 +1,5 @@
 [libdefaults]
+    renew_lifetime = 0
     default_realm = {{ security_options.realm | upper }}
     default_ccache_name = /tmp/krb5cc_%{uid}
 [realms]
