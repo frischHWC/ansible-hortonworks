@@ -1,7 +1,10 @@
 [libdefaults]
-    renew_lifetime = 0
+    forwardable = true
+    ticket_lifetime = 24h
     default_realm = {{ security_options.realm | upper }}
     default_ccache_name = /tmp/krb5cc_%{uid}
+    dns_lookup_realm = false
+    dns_lookup_kdc = false
 [realms]
     {{ security_options.realm | upper }} = {
         kdc = {{ security_options.external_hostname|default(hostvars[groups['ambari-server']|first]['ansible_fqdn'],true) }}
